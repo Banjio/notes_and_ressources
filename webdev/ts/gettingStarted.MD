@@ -91,3 +91,11 @@ typescript extends this types
 Type is similiar to interface intended for building types (the later should be prefered in most cases). In typescript you can create new types by combining primitives
 
 * Type can be used to create unions 
+
+# Misc
+# Resource: Typescript Course Begginers (YT)
+
+## Implicit Typecasts
+
+* `const input2 = document.getElementById("num2")! as HTMLInputElement;` &Rightarrow; "!" tells ts that this item will never be Nil and typecasts it to an HTMLInput ELement  (Implicit Typecasts)
+* adding `+` in front of a parameter given to a function silences the linter warning (string not compatible with numeric)

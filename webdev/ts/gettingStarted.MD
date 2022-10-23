@@ -29,7 +29,7 @@ interface User {
     name: string;
     id: number;
 }
-// Now declause a user like this
+// Now declare a user like this
 const user: User = {
     name: "Hayes",
     id: 0,
@@ -99,3 +99,21 @@ Type is similiar to interface intended for building types (the later should be p
 
 * `const input2 = document.getElementById("num2")! as HTMLInputElement;` &Rightarrow; "!" tells ts that this item will never be Nil and typecasts it to an HTMLInput ELement  (Implicit Typecasts)
 * adding `+` in front of a parameter given to a function silences the linter warning (string not compatible with numeric)
+
+## Core Functionality
+### Core Types:
+
+These are the types, js and ts have in common 
+
+* Number: Ts (Js) makes no difference between float or integer
+* String: Using Strings with backticks can be used for string interpolation in modern js
+* boolean: Only supports true and false
+* Objects: Are comparable to pythons dictionaries, i.e. they are key value pairs that can be nested infinitly 
+* Arrays: Can store values of the same type or different types if you use `any[]` for initialization (However this has the downside of no type checking)
+
+### Typescript specific types
+
+* tuples: is a fixed size array
+* enums: Is a custom type which assings labels to numbers and are great if you need humanly readable labels
+* Any: Allows any type but is strongly discouraged because it takes away the advantages of typescript
+

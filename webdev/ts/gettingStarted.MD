@@ -116,4 +116,9 @@ These are the types, js and ts have in common
 * tuples: is a fixed size array
 * enums: Is a custom type which assings labels to numbers and are great if you need humanly readable labels
 * Any: Allows any type but is strongly discouraged because it takes away the advantages of typescript
+* Union  types: we can give multiple types to one parameter in a function like `function  add(n1: number |string, n2: number | string)...` using the pipe operator `|` we can specify as many types as we need.
+* Literal types: you can give them to a function parameter and these are the only types allowed as parameters, for example `function  add(n1: number |string, n2: number | string, resultConversion: 'as-number' | 'as-text')...`
 
+### Type aliases
+
+With type aliases you can create your own types using the `type` operator. Typically in conjunction with union types `type Combinable = number | string`

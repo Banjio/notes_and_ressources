@@ -184,7 +184,27 @@ With type aliases you can create your own types using the `type` operator. Typic
     * **noImplicitReturns**: If a function does not return anything in all cases (e.g. returning from an if statement) the compiler will complain
 * **Debugging with vscode**: Use the extension Debugger for Chrome/Firefox. Then you can set breakpoints inside ts files. Note that the sourceMap option in tsconfig should be enabled
 
+### Ressources for Compiler 
 
-## Common pitfalls
+* Tsconfig Docs https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
+* Compiler Config Docs https://www.typescriptlang.org/docs/handbook/compiler-options.html
+* VS Code TS Debugging https://code.visualstudio.com/docs/typescript/typescript-debugging
+
+## Ch3. Next-gen JS & TS
+
+* only the keywords `const` and `let` should be used to assign variables. Using `const` we can only assign a variable once. `var` is available but should not be used anymore because with var js only knows global or function spaces. Whereas let also knows block spaces (e.g. defined inside an if statement).
+* **Arrow functions**: Allow us to write functions more precise like: 
+    ```ts
+    const add = (a: number, b: number) => a + b; 
+    ```
+* Note that this syntax only works for one liners, see the .ts file for more examples
+* Compared to older js version we can also assign **default values** to **function parameter** the same way we would do in python.
+* **Spread Operator**: Use the spread operator `...` in front of iterables  to unpack them. For example this can be useful if we want to combine two arrays. Note that this can also be used for objects. 
+* **Rest Parameters**: This somewhat similiar to args in python &Rightarrow; Adding variable parameters to functions using the spread operator allows variable length parameters in functions. This also works with tuples
+* **Array and object destructuring**: This can be used if we want to unpack an array into different variables, e.g. `const [hobby1, hobby2, ...remaining] = hobbies;`. The same can be applied to objects 
+
+##### Ressources and Links
+
+# Common pitfalls
 
 * If you use button and document.query you need to defer the script or otherwise the button will not be found (Will be null)

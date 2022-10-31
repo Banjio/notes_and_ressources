@@ -327,7 +327,57 @@ function printEmployeeInfo(emp: UnknownEmployee){
 * We can also use the `instanceof` keyword if we use classes to define a typeguard on classes.
 * **Discrimanted Unions**: This makes implementing type guards easier for interfaces. This can be accomplisehd by adding a type variable to an interface.
 * **Type casting**: We can use type casting especially if we work with the dom, e.g. cast an unknown HTMLElement to type input `const userInputElement = <HTMLInputElement>document.getElementById('user-input');`. To not clash with jsx syntax the same can be achieved using another syntax `const userInputElement = document.getElementById('user-input')! as HTMLInputElement;`
-* **Index properties**: 
+* **Index types**: Can be used if we have a interface where wo do not know the number of elemts an object will have.
+
+```ts
+interface ErrorContainer {
+    [prop: string]: string;
+}
+```
+* This means that we only know that we have properties which have a name interpretable as string and the value is also interpretable as string. 
+* **Function overloads**: We can overload a function with different parameter types so that a return type can be identified at compilation time, e.g.:
+
+```ts
+function add(a: number, b: number): number
+function add(a: Combinable, b: Combinable){
+    // This is called a type guard
+    if(typeof a === 'string' || typeof b === 'string'){
+        return a.toString() + b.toString()
+    }
+
+    return a + b;
+}
+```
+* **Optional chaining**: Relevant if we do not know the type of data at compilation time, e.g. data fetched from a database. Optional chaining is used with the `?` operator for example: `console.log(fetchedUserData?.job?.title);`.
+const storedData = userInput ?? 'DEFAULT';
+* **Nullish Coalescing**: Is useful if you want to define a fallback value in case some data is null or undefined, this is set with the `??` operator, e.g. `const storedData = userInput ?? 'DEFAULT';`
+
+#### Additional ressources
+
+https://www.typescriptlang.org/docs/handbook/2/types-from-types.html
+
+## Ch6. Generics
+
+Generics are types that work with other types and may provide different functionality based on the type its associated with. One example would be arrays, e.g. `const names: Array<string>= [];` then the ts compiler will know that all elements associated to names will have the type string. 
+
+* **Generic Functions**: Can help us clarify more what type an object has if we work with objects, for example writing a merge function that will combine 2 objects:
+
+    ```ts
+    function merge<T, U>(objA: T, objB: U) {
+    return Object.assign(objA, objB)
+    }
+    ```
+
+* Only with the generic types we can do `merge({name: 'Max'}, {age: 30}).age`
+* **Constraints**: We can say that generic must be of a specific type so that a function does not silenty fail if we give them a type we do not expect, e.g.:
+
+    ```ts
+    function merge<T extends object, U extends object>(objA: T, objB: U) {
+        return Object.assign(objA, objB)
+    }
+    ```
+
+* This will then throw an error for `const mergedObj2 = merge({name: 'Max'}, 30)`
 # Common pitfalls
 
 * If you use button and document.query you need to defer the script or otherwise the button will not be found (Will be null)

@@ -205,6 +205,129 @@ With type aliases you can create your own types using the `type` operator. Typic
 
 ##### Ressources and Links
 
+## Ch4. Classes and Interfaces
+### Basics
+
+* **OOP**: Can help to resemble natural structures thus making it easier to understand and use them in your code. E.g. Product List, Product, Shopping card  may be object in an online shop
+* **Classes & Instances**: Blueprints for objects (How should an object look like) &Rightarrow; An object created from class is called **instance** of a class. Classes make creation of same objects way easier
+* Classes and instances are constructed like:
+
+```ts
+// Class "Blueprint"
+class Departement {
+    name: string ;
+
+    constructor(n: string) { 
+        this.name = n;
+    }
+}
+// Instance of class Departement
+const accounting = new Departement("Accounting");
+
+console.log(accounting)
+```
+
+* Note that below ES6 the compiled js for this code uses constructor functions which looks quite different than the class syntax
+* `this` can be a tricky keyword from time to time. As rule of thumb you can memorize, this will usually refer to the object calling a class method and not to an object a reference was done to (E.g. when copying a function of an isntance). If you add the `this` keyword to a method the compiler can catch some errors of this kind.
+* Using the `private` keyword you can make propertys (property = variable of a class) private so that they cannot be accessed outside of the functions. `public` can also be used in front of variables. Buts its the default. Thus there is no need to use it. private and public keywords are only available in really modern js
+* To declare propertys, there is also a shorthand notation like:
+
+```ts
+class Departement {
+    // private id: string;
+    // private name: string ;
+    private employees: string[] = [];
+
+    constructor(private id: string, public name: string) { 
+        //this.name = n;
+    }
+```
+
+* Using the keyword `readonly` after private or public you can define that the value of a property can never be changed after initilalization. (This only exists in ts)
+
+### OOP Features
+
+* We can let a class inherit from another class by using the `extends` keyword, e.g. `class ITDepartement extends Departement {...}`. Note ts only supports single inheritance.
+* With a constructor in the child class we need to use the keyword `super` to properly initialize the constructor. `super` must be called at first place in the constructor. 
+* If we create a class method of the same name as from a parent class we ovverride it. 
+* `protected` is another modifier for variables that allows to change variables outside of the parent class (e.g. in a child class) but not from outside the classes. 
+* `getters` and `setters`: Used to set and get values for privates properties, e.g.:
+
+```ts
+class AccountingDepartement extends Departement {
+    // We an only use the shorthand initilization. But this is to make clear that we have to use super before all other this calls.
+    private _lastReport: string;
+
+    get lastReport(){
+        if(this._lastReport){
+            return this._lastReport;
+        }
+        throw new Error('No report found.')
+        //return "Test";
+    }
+
+    set lastReport(value: string){
+        if(!value){
+            throw  new Error('Please pass in a valid value!')
+        }
+        this._lastReport = value
+    }
+```
+
+* **static** propertoies and classes: Usually for utility functions or global constants. E.g. the `Math` class defined by vanilla js is such an example. They are created with the `static` keyword. Note that you cannot access them with the `this` keyword inside your class. 
+* **Abstract Classes**: Way of "forcing" a developer that a method is available (and you cannot provide this method in the parent class). Are defined like this `abstract describe(this: Departement): void;`. With an abstract method you only define how a method should look like and not what it should do. Note that a class that contains an abstract method must also be defined as abstract like `abstract class ClassName` &Rightarrow; Abstract classes cannot be instantiated themselves only their child classes. 
+* **Private Constructor** (Or singleton pattern): A singleton is a class that allows only one instance to be created of that class and all other variables are references to this instance. See AccountingDepartmenet in classes.ts as example. In short we need to mark the constructor as `private` and at a 
+`static` instance / getInstance property/method. 
+
+### Interfaces
+
+In its simplest form describe the structure of an object. This only exists in typescript not vanilla js. Convention is the same as classes that the **first letter** should be **uppercase**
+
+* An interface is created with `interface Person {...}` it can hold definitions of variables and functions:
+
+```ts
+interface Person {
+    name: string;
+    age: number;
+
+    greet(phrase: string): void;
+}
+```
+
+* Interfaces can also be implemented in classes. This teels ts that this class needs to adhere to the structure of the interface. It is used like this: `class ClassName implements InterfaceName{...}`
+* Interfaces also can have the `readonly` identifier. 
+* Inheritance is also available for interfaces using the `extends` keyword. 
+* Interfaces can also be used to define the structure of a function. 
+* Interface properties and methods can  be made optional by adding a question mark behind its name. (The same works for classes) 
+
+
+See ch4*/app.ts for examples about interfaces
+
+## Ch5. Advanced Types
+
+* **Intersection types** allow us to combine multiple types to one type that contains all variables, e.g. `type ElevatedEmployee = Admin & Employee;`. Something similiar can be achieved  by extending an interface by multiple interfaces. 
+* **Type guards**: In general a type guard is to protect a programm from failing if you allow union types (e.g. strings and numbers) and catch the error using if. 
+* Using the `in` operator we can create more complex type guards that fail `if(objectExits)` checks:
+
+```ts
+
+function printEmployeeInfo(emp: UnknownEmployee){
+    console.log('Name: ' + emp.name);
+    if('privileges' in emp){
+        console.log('Privileges: ' + emp.privileges);
+    }
+
+    if('startDate' in emp){
+        console.log('Privileges: ' + emp.startDate);
+    }
+}
+
+```
+
+* We can also use the `instanceof` keyword if we use classes to define a typeguard on classes.
+* **Discrimanted Unions**: This makes implementing type guards easier for interfaces. This can be accomplisehd by adding a type variable to an interface.
+* **Type casting**: We can use type casting especially if we work with the dom, e.g. cast an unknown HTMLElement to type input `const userInputElement = <HTMLInputElement>document.getElementById('user-input');`. To not clash with jsx syntax the same can be achieved using another syntax `const userInputElement = document.getElementById('user-input')! as HTMLInputElement;`
+* **Index properties**: 
 # Common pitfalls
 
 * If you use button and document.query you need to defer the script or otherwise the button will not be found (Will be null)

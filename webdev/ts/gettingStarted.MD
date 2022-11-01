@@ -303,6 +303,9 @@ interface Person {
 
 See ch4*/app.ts for examples about interfaces
 
+#### Additional Ressources
+* **JS Classes**: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+* **TS Interfaces**: https://www.typescriptlang.org/docs/handbook/2/objects.html
 ## Ch5. Advanced Types
 
 * **Intersection types** allow us to combine multiple types to one type that contains all variables, e.g. `type ElevatedEmployee = Admin & Employee;`. Something similiar can be achieved  by extending an interface by multiple interfaces. 
@@ -378,6 +381,78 @@ Generics are types that work with other types and may provide different function
     ```
 
 * This will then throw an error for `const mergedObj2 = merge({name: 'Max'}, 30)`
+* We can also check that a type should have a specific property, e.g. a `length` property. We can use interfaces for that purpose, see the function `countAndDescribe` as example
+* **keyof** Constraint: To tell typescript that an generic object adheres to a specific feature we can use keyof, e.g. 
+
+```ts
+function extractAndConvert<T extends object, U extends keyof T>(obj:  T, key: U) {
+    return obj[key];
+}
+```
+
+* **Generic classes**: Same idea as functions by increasing the flexibility of a type, e.g. see `DataStorage` class. 
+* **Generic Utility Types**: Build in generic types that can be handy for special use cases, e.g. `ReadOnly` or `Partial`. 
+* Union types are not the same as generics, because although we can set multiple types with union types, once they are set they cannot take another type. Whereas with generics this is possible
+* **More on generics**: https://www.typescriptlang.org/docs/handbook/generics.html
+
+## Ch7. Decorators
+
+* To use decorators we need to change tsconfig: `target` must be es6 or greater and `experimentalDecorators` must be true.
+* Decorators are functions that start with a capital letter
+* Decorators are added to classes or functions using the `@` keyword
+* **Decorator Factories**: Are functions that return a new function (similiar to python decorators). In Ts however this allows us to configure our decorator. Decorator functions are build like this:
+
+```ts
+function Logger(logString: string){
+    return function(constructor: Function){
+        console.log(logString)
+        console.log(constructor)
+    }
+}
+```
+
+* It is also possible to add multiple decorators to one class or function. Logs are executed in bottom up order. But outside the decorator factory (inner function) the order is top down. 
+* **Property Decoratros**: We can also use decorators on properties, then the decorator takes 2 paramerter `target` and `propertyName`. It is then executed when the class is created (See Ch7/app.ts). 
+* If you want to use decorators for **getters/setters or methods** you use the decorator structure `function Log3(target: any, name: string, descriptor: PropertyDescriptor)`
+* **Parameter** decorators: Can be used on parameters inside functions and have the structure `function Log4(target: any, name: string, position: number)` they are then used for example `getPriceWithTax(@Log4 tax: number)` and could be used on any parameter inside a function definiition.  
+* A decorator is executed when you define a function or class **not** when it is executed (I think this is a key different to python). For that you would use event listeners. However it may be possible to tweak a decorator so that it is executed every time a function/class is called. See WithTemplate decorator as example. The key difference is that for example for classes the decorator **returns** a new constructor which has the logic inside we would like to see at creation of an object
+* **Autobind Decorator**: Use case we want to bind an eventListener to a class method everytime we create an instance from it, e.g.
+
+```ts
+function Autobind(_: any, _2: string, descriptor: PropertyDescriptor){
+    const origMethod = descriptor.value;
+    const adjDescriptor: PropertyDescriptor = {
+        configurable: true,
+        enumerable: false,
+        get() {
+            const boundFn = origMethod.bind(this)
+            return boundFn;
+        }
+    };
+    return adjDescriptor
+}
+
+class Printer {
+    message = 'This works!';
+
+    @Autobind
+    showMessage(){
+        console.log(this.message);
+    }
+}
+
+const p = new Printer();
+const button = document.querySelector('button')!;
+// Without the Autobind we had to call it like this
+// button.addEventListener('click', p.showMessage.bind(p))
+button.addEventListener('click', p.showMessage)
+```
+
+* **Validation** with decorators: Especially useful if you want to validate that the input of a user input, database is of the desired form. 
+* **More Ressources**: https://www.typescriptlang.org/docs/handbook/decorators.html
+
+## Ch8: Building a drag and drop element
+
 # Common pitfalls
 
 * If you use button and document.query you need to defer the script or otherwise the button will not be found (Will be null)
